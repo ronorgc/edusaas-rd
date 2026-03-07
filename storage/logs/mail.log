@@ -1,0 +1,38 @@
+[2026-03-04 22:58:20] [ERROR] Para:colegio@demo.com | SMTP: Código 535 inesperado (esperaba 235): 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 00721157ae682-79876bfc6besm81971617b3.26 - gsmtp
+[2026-03-04 23:03:26] [ERROR] Para:colegio@demo.com | SMTP: Código 535 inesperado (esperaba 235): 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 00721157ae682-79876bf8103sm83369857b3.27 - gsmtp
+[2026-03-04 23:04:39] [ERROR] Para:ronerborg@gmail.com | SMTP: Código 535 inesperado (esperaba 235): 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 00721157ae682-79876c53644sm83088147b3.39 - gsmtp
+[2026-03-04 23:09:50] [ERROR] Para:ronerborg@gmail.com | SMTP: Código 535 inesperado (esperaba 235): 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 00721157ae682-79876a8fe93sm81531117b3.7 - gsmtp
+[2026-03-04 23:16:31] [ERROR] Para:ronerjborg@gmail.com | SMTP: No se pudo conectar a :587 — No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión (#10061)
+[2026-03-04 23:16:58] [ERROR] Para:ronerjborg@gmail.com | SMTP: No se pudo conectar a :587 — No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión (#10061)
+[2026-03-04 23:18:20] [OK-SMTP] Para:ronerjborg@gmail.com | 🧪 EduSaaS RD — Prueba de configuración SMTP
+[2026-03-04 23:19:58] [OK-SMTP] Para:ronerborg@gmail.com | lñm
+[2026-03-05 01:01:00] [OK-SMTP] Para:ronerborg@gmail.com | k
+[2026-03-05 01:02:30] [OK-SMTP] Para:ronerborg@gmail.com | 2
+[2026-03-05 01:05:00] [OK-SMTP] Para:ronerborg@gmail.com | ✅ EduSaaS RD — Pago confirmado (EduSaaS-2026-0002)
+[2026-03-05 02:12:44] [OK-SMTP] Para:ronerborg@gmail.com | 🔒 EduSaaS RD — Acceso suspendido
+[2026-03-05 07:33:43] [OK-SMTP] Para:ronerjborg@gmail.com | ¡Bienvenido a EduSaaS RD! — Tus credenciales de acceso
+[2026-03-05 18:31:34] [OK-SMTP] Para:ronerborg@gmail.com | ¡Bienvenido a EduSaaS RD! — Tus credenciales de acceso
+[2026-03-05 19:18:48] [OK-SMTP] Para:ronerborg@gmail.com | 🔒 EduSaaS RD — Acceso suspendido
+[2026-03-05 19:18:50] [OK-SMTP] Para:ronerborg@gmail.com | 🔒 EduSaaS RD — Acceso suspendido
+[2026-03-05 21:26:05] [OK-SMTP] Para:ronerborg@gmail.com | hola
+[2026-03-05 21:31:23] [OK-SMTP] Para:ronerborg@gmail.com | 🔑 Tu contraseña ha sido restablecida — Colegio Demo
+[2026-03-06 07:08:18] [OK-SMTP] Para:ronerborg@gmail.com | ✅ EduSaaS RD — Pago confirmado (EduSaaS-2026-0002)
+[2026-03-06 11:05:05] [OK-SMTP] Para:juan@director.com | ¡Tu cuenta en EduSaaS RD ha sido activada!
+[2026-03-06 11:45:03] [OK-SMTP] Para:juan@director.com | 🔒 EduSaaS RD — Acceso suspendido
+[2026-03-06 17:33:58] [OK-SMTP] Para:ronerjborg@gmail.com | ¡Bienvenido a EduSaaS RD! — Tus credenciales de acceso
+[2026-03-06 17:36:07] [OK-SMTP] Para:ronerjborg@gmail.com | ¡Bienvenido a EduSaaS RD! — Tus credenciales de acceso
+[2026-03-06 17:48:24] [OK-SMTP] Para:juan@director.com | 🔒 EduSaaS RD — Acceso suspendido
+[2026-03-06 18:04:19] [OK-SMTP] Para:ronerjborg@gmail.com | ✅ EduSaaS RD — Pago confirmado (EduSaaS-2026-0003)
+[2026-03-06 18:06:12] [OK-SMTP] Para:ronerjborg@gmail.com | ✅ EduSaaS RD — Pago confirmado (EduSaaS-2026-0004)
+[2026-03-06 18:07:33] [OK-SMTP] Para:juan@director.com | ✅ EduSaaS RD — Pago confirmado (EduSaaS-2026-0005)
+[2026-03-06 18:10:43] [OK-SMTP] Para:juan@director.com | ✅ EduSaaS RD — Pago confirmado (EduSaaS-2026-0006)
+[2026-03-06 18:18:48] [OK-SMTP] Para:ronerjborg@gmail.com | holad
+[2026-03-06 19:00:24] [OK-SMTP] Para:admin@edusaas.com | Nueva solicitud de registro: FE
+[2026-03-06 19:02:30] [OK-SMTP] Para:ronerjborg@gmail.com | ¡Tu cuenta en EduSaaS RD ha sido activada!
+[2026-03-06 19:46:21] [OK-SMTP] Para:ronerjborg@gmail.com | 🔒 EduSaaS RD — Acceso suspendido
+[2026-03-06 19:46:37] [OK-SMTP] Para:ronerjborg@gmail.com | ✅ Tu acceso ha sido reactivado — Colegio Demo 1
+[2026-03-06 21:04:44] [ERROR] Para:ronerborg@gmail.com | SMTP: Código 0 inesperado (esperaba 250): 
