@@ -18,24 +18,21 @@
     $_color_accent  = ConfigModel::get('marca_color_acento',   '#10b981');
     ?>
     <style>
+    /* Valores dinámicos de ConfigModel + variables estáticas del sistema (ADR — BUG-B9-03) */
     :root {
-        --primary: <?= htmlspecialchars($_color_primary) ?>;
-        --accent:  <?= htmlspecialchars($_color_accent) ?>;
+        --primary:   <?= htmlspecialchars($_color_primary) ?>;
+        --primary-dk:#1240a8;
+        --accent:    <?= htmlspecialchars($_color_accent) ?>;
+        --success:   #10b981;
+        --danger:    #ef4444;
+        --sidebar-width: 260px;
+        --sidebar-bg:#0f172a;
+        --sidebar-tx:#94a3b8;
+        --sidebar-active-bg: rgba(26,86,219,0.18);
+        --sidebar-active-tx: #60a5fa;
+        --body-bg:   #f1f5f9;
+        --card-bg:   #ffffff;
     }
-        :root {
-            --sidebar-width: 260px;
-            --primary:   #1a56db;
-            --primary-dk:#1240a8;
-            --accent:    #f59e0b;
-            --success:   #10b981;
-            --danger:    #ef4444;
-            --sidebar-bg:#0f172a;
-            --sidebar-tx:#94a3b8;
-            --sidebar-active-bg: rgba(26,86,219,0.18);
-            --sidebar-active-tx: #60a5fa;
-            --body-bg:   #f1f5f9;
-            --card-bg:   #ffffff;
-        }
 
         * { box-sizing: border-box; }
 
@@ -271,7 +268,7 @@
 // Obtener usuario de sesión
 $_usuario_sesion = $_SESSION['usuario'] ?? null;
 $_rol_id         = $_SESSION['rol_id']  ?? null;
-$_url_base       = (require __DIR__ . '/../../config/app.php')['url'];
+$_url_base       = APP_URL; // ADR-016: constante global, no require por vista
 
 // Función helper para URL activa
 function isActive(string $path): string {
@@ -336,12 +333,9 @@ if ($_usuario_sesion) {
         <li><a href="<?= $_url_base ?>/superadmin/preregistros" class="<?= isActive('/superadmin/preregistros') ?>">
             <i class="bi bi-building-add"></i> Solicitudes
             <?php
-            try {
-                $__pend = (int)Database::getInstance()
-                    ->query("SELECT COUNT(*) FROM preregistro_colegios WHERE estado='pendiente'")
-                    ->fetchColumn();
-                if ($__pend > 0) echo "<span class='badge bg-warning text-dark ms-1'>{$__pend}</span>";
-            } catch (Exception $__e) {}
+            // $preregistrosPendientes se pasa desde SuperAdminController — no query en vista (BUG-B9-04)
+            $_pend = (int)($preregistrosPendientes ?? 0);
+            if ($_pend > 0) echo "<span class='badge bg-warning text-dark ms-1'>{$_pend}</span>";
             ?>
         </a></li>
         <li><a href="<?= $_url_base ?>/superadmin/salud" class="<?= isActive('/superadmin/salud') ?>">
@@ -516,7 +510,7 @@ if ($_usuario_sesion) {
                 </div>
             </div>
             <?php if (($_SESSION['rol_id']??0) !== ROL_SUPER_ADMIN): ?>
-            <a href="/cdn-cgi/l/email-protection#99a5a6a4b9f1edf4f5eae9fcfaf0f8f5faf1f8ebeab1daf6f7fff0fed4f6fdfcf5a3a3fefcedb1befcf4e9ebfceaf8c6fcf4f8f0f5beb5beeaf6e9f6ebedfcd9fcfdeceaf8f8eab7fdf6beb0b0b9a6a7" class="btn btn-sm" style="background:<?= $_color ?>;color:#fff;white-space:nowrap">
+            <a href="mailto:soporte@edusaas.do" class="btn btn-sm" style="background:<?= $_color ?>;color:#fff;white-space:nowrap">
                 Contratar plan →
             </a>
             <?php endif; ?>
@@ -531,7 +525,7 @@ if ($_usuario_sesion) {
 </div>
 
 <!-- Bootstrap JS -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
     // Cerrar flash automáticamente
     const flash = document.getElementById('flash-msg');

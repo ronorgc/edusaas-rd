@@ -219,10 +219,7 @@
     </div>
     <?php endif; ?>
 
-    <?php
-    $appConfig = require __DIR__ . '/../../config/app.php';
-    $urlBase   = $appConfig['url'];
-    ?>
+    <?php $urlBase = APP_URL; // ADR-016 ?>
 
     <form action="<?= $urlBase ?>/auth/login" method="POST" novalidate>
         <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
