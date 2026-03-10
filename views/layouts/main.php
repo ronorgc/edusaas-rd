@@ -270,10 +270,17 @@ $_usuario_sesion = $_SESSION['usuario'] ?? null;
 $_rol_id         = $_SESSION['rol_id']  ?? null;
 $_url_base       = APP_URL; // ADR-016: constante global, no require por vista
 
-// Función helper para URL activa
+// Función helper para URL activa (MEJ-B9-02: candidata a BaseController::isActive() en refactor futuro)
 function isActive(string $path): string {
     $urlActual = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     return str_contains($urlActual, $path) ? 'active' : '';
+}
+
+// Función helper para mensajes flash con HTML interno limitado (MEJ-B9-01)
+// Solo permite tags seguros del sistema — nunca pasar input de usuario sin sanitizar
+function flashHtml(string $mensaje): string {
+    static $allowedTags = '<strong><em><a><br><span>';
+    return strip_tags($mensaje, $allowedTags);
 }
 
 // Iniciales del usuario para el avatar
@@ -317,8 +324,7 @@ if ($_usuario_sesion) {
         <li><a href="<?= $_url_base ?>/superadmin" class="<?= isActive('/superadmin') ?>">
             <i class="bi bi-shield-fill-check"></i> Dashboard
         </a></li>
-        <li><a href="<?= $_url_base ?>/superadmin/cobros" class="<?= isActive('/superadmin/cobros') ?>"
-               style="<?= strpos($_SERVER['REQUEST_URI'] ?? '', '/superadmin/cobros') !== false ? '' : '' ?>">
+        <li><a href="<?= $_url_base ?>/superadmin/cobros" class="<?= isActive('/superadmin/cobros') ?>">
             <i class="bi bi-cash-coin"></i> Caja de Cobros
         </a></li>
         <li><a href="<?= $_url_base ?>/superadmin/instituciones" class="<?= isActive('/superadmin/instituciones') ?>">
@@ -487,7 +493,7 @@ if ($_usuario_sesion) {
         ][$flash['tipo']] ?? 'alert-info';
     ?>
     <div class="flash-alert alert <?= $tipoClase ?>" id="flash-msg" role="alert">
-        <?= $flash['mensaje'] /* HTML interno del sistema — nunca input de usuario sin sanitizar */ ?>
+        <?= flashHtml($flash['mensaje']) /* tags permitidos: strong, em, a, br, span */ ?>
     </div>
     <?php endif; ?>
 
@@ -497,7 +503,9 @@ if ($_usuario_sesion) {
         $_td = (int)$_SESSION['aviso_trial'];
         $_tt = (int)($_SESSION['trial_dias_total'] ?? 14);
         $_pct = $_tt > 0 ? max(0, min(100, round(100 * (1 - $_td / $_tt)))) : 100;
-        $_color = $_td <= 3 ? '#dc2626' : ($_td <= 7 ? '#d97706' : '#7c3aed');
+        $_color_raw = $_td <= 3 ? '#dc2626' : ($_td <= 7 ? '#d97706' : '#7c3aed');
+        // Validar formato hex para evitar CSS injection en el inline style (MEJ-B9-03)
+        $_color = preg_match('/^#[0-9a-fA-F]{3,6}$/', $_color_raw) ? $_color_raw : '#7c3aed';
     ?>
     <div style="background:<?= $_color ?>11;border-bottom:2px solid <?= $_color ?>33;padding:.6rem 1.5rem;font-size:.85rem">
         <div class="d-flex align-items-center gap-3">
@@ -527,14 +535,32 @@ if ($_usuario_sesion) {
 <!-- Bootstrap JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Cerrar flash automáticamente
+    // Cerrar flash automáticamente tras 4 segundos
     const flash = document.getElementById('flash-msg');
     if (flash) {
         setTimeout(() => {
+            flash.style.transition = 'opacity .5s ease';
             flash.style.opacity = '0';
-            flash.style.transition = 'opacity .5s';
             setTimeout(() => flash.remove(), 500);
         }, 4000);
     }
 
-    // Toggle sideba
+    // Toggle sidebar en móvil
+    const toggleBtn = document.getElementById('toggle-sidebar');
+    const sidebar   = document.getElementById('sidebar');
+    if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+        // Cerrar sidebar al hacer click fuera en móvil
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 768 &&
+                !sidebar.contains(e.target) &&
+                !toggleBtn.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
+    }
+</script>
+</body>
+</html>

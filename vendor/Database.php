@@ -30,11 +30,13 @@ class Database
             try {
                 self::$instance = new PDO($dsn, $config['username'], $config['password'], $config['options']);
             } catch (PDOException $e) {
-                // En producción nunca mostrar detalles del error
+                // En producción nunca mostrar detalles del error al usuario
                 $appConfig = require __DIR__ . '/../config/app.php';
                 if ($appConfig['debug']) {
                     die('Error de conexión: ' . $e->getMessage());
                 } else {
+                    // Registrar en el log del servidor para diagnóstico (sin exponer al usuario)
+                    error_log('[EduSaaS] Error de conexión a BD: ' . $e->getMessage());
                     die('Error interno del servidor. Contacte al administrador.');
                 }
             }

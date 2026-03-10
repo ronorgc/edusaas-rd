@@ -8,6 +8,7 @@
 if (file_exists(__DIR__ . '/../.env')) {
     foreach (file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $linea) {
         if (str_starts_with(trim($linea), '#')) continue; // ignorar comentarios
+        if (!str_contains($linea, '=')) continue; // ignorar líneas sin clave=valor
         [$clave, $valor] = explode('=', $linea, 2);
         $_ENV[trim($clave)] = trim($valor);
     }

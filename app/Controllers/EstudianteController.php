@@ -383,7 +383,7 @@ class EstudianteController extends BaseController
      */
     private function subirFoto(array $file, int $instId): ?string
     {
-        $dir = __DIR__ . '/../../public/uploads/fotos/' . $instId . '/';
+        $dir = rtrim($this->config['upload']['path'] ?? (__DIR__ . '/../../public/uploads/'), '/') . '/fotos/' . $instId . '/';
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }

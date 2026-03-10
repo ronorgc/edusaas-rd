@@ -85,11 +85,18 @@ define('FLASH_WARNING', 'warning');
 define('FLASH_INFO',    'info');
 
 // --- Cron Job (recordatorio de vencimiento) ---
-// Token secreto para llamadas automáticas al endpoint de cron.
-// Cámbialo por cualquier cadena larga y aleatoria.
+// Token secreto leído desde .env — NUNCA hardcodear en el código fuente.
+// Agregar al .env:  CRON_SECRET=<cadena larga y aleatoria>
 // Ejemplo de uso en cPanel/Linux:
-//   0 8 * * * curl -s "https://tudominio.com/superadmin/cron/avisos-vencimiento?token=CRON_SECRET_AQUI"
-define('CRON_SECRET', 'cron_edusaas_2024_cambia_esto');
+//   0 8 * * * curl -s "https://tudominio.com/superadmin/cron/avisos-vencimiento?token=TU_CRON_SECRET"
+if (!defined('CRON_SECRET')) {
+    $cronSecret = $_ENV['CRON_SECRET'] ?? '';
+    if (empty($cronSecret)) {
+        // En desarrollo puede seguir funcionando; en producción el cron simplemente no disparará.
+        error_log('[EduSaaS] ADVERTENCIA: CRON_SECRET no está definido en .env');
+    }
+    define('CRON_SECRET', $cronSecret);
+}
 
 // --- URL Base de la Aplicación (ADR-016) ---
 // Centraliza la URL del sistema. Todas las vistas usan APP_URL directamente.

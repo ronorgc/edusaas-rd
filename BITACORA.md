@@ -1,8 +1,8 @@
 # 📓 BITÁCORA DEL PROYECTO: EduSaaS RD
 
-**Última actualización:** 2026-03-09 — Sesión 016
+**Última actualización:** 2026-03-10 — Sesión C-003
 **Versión del sistema:** 1.0.0
-**Estado general:** 🟢 CODE REVIEW 100% COMPLETO — 117 archivos · 10 críticos · 53 medios · 78 mejoras · Próximo: Oleadas de corrección 0→8
+**Estado general:** 🟡 CORRECCIONES EN CURSO — Oleadas 0+1+2+3 ✅ · Oleada 4 (XSS) es la última antes del deploy mínimo seguro
 
 
 
@@ -55,6 +55,10 @@ Browser → public/.htaccess → public/index.php (Front Controller)
 
 | Fecha | Módulo/Feature | Descripción | Notas |
 |-------|---------------|-------------|-------|
+| 2026-03-10 | Oleada 3 ✅ | `views/layouts/main.php` — BUG-B9-02 (mailto restaurado, script CF eliminado), MEJ-B9-01 (flashHtml() con whitelist), MEJ-B9-03 (color hex validado). Archivo reconstruido completo. | Sesión C-003 |
+| 2026-03-10 | Oleada 2 ✅ | `app.php`, `constants.php`, `index.php`, `Database.php`, `EstudianteController.php` — MEJORA-1 al 6: debug false, CRON_SECRET a .env, upload path unificado, guard .env parser, error_log BD | Sesión C-003 |
+| 2026-03-09 | Oleada 1 ✅ | `AnoEscolarModel.php` renombrado + 5 archivos APP_URL, CSRF cobros corregido, SMTP password del DOM eliminado | Sesión C-002 |
+| 2026-03-09 | Oleada 0 ✅ | App Password Gmail revocada y regenerada, `.env` en `.gitignore`, commit `pre-fixes` | Sesión C-002 |
 | 2026-03-09 | Code Review B9 COMPLETO | Layout/Auth/Partials/FrontController: layouts-main, auth-login, partials-plan_uso, preregistro-formulario, preregistro-gracias, public-index, .htaccess | 2 críticos, 5 medios, 6 mejoras |
 | 2026-03-09 | Code Review B8d COMPLETO | Vistas Públicas: 403, 404, mantenimiento, suspendido, preinscripcion-confirmacion, preinscripcion-gracias, preinscripcion-formulario | 1 crítico, 5 medios, 8 mejoras |
 | 2026-03-09 | Code Review B8c COMPLETO | Views Emails: layout, bienvenida, confirmacion_pago, aviso_vencimiento, suspension, reset_clave, preinscripcion_aprobada, personalizado, smtp_test | 1 crítico, 2 medios, 5 mejoras |
@@ -83,9 +87,10 @@ Browser → public/.htaccess → public/index.php (Front Controller)
 
 ## 🔄 EN PROGRESO
 
-- [ ] **Oleada 0** — Revocar credencial `.env` expuesta (acción manual inmediata)
-- [ ] **Oleada 1** — Infraestructura crítica (5 bugs fatales: BUG-CRÍTICO-1, BUG-CRÍTICO-2, BUG-V-01, BUG-V-05, BUG-V-15)
-- [ ] Corrección de bugs críticos y medios identificados en bloques 1-9
+- [ ] **Oleada 4** — XSS sistémico: `htmlspecialchars()` y `json_encode()` faltantes (~18 puntos)
+  - Ronda 1: `instituciones/index.php` + `instituciones/ver.php` + `cobros/recibo_cobro.php`
+  - Ronda 2: `pagos/recibo.php` + `usuarios/index.php` + `configuracion/index.php`
+  - Ronda 3: `cobros/index.php` + `preregistros/ver.php`
 
 ---
 
@@ -93,13 +98,7 @@ Browser → public/.htaccess → public/index.php (Front Controller)
 
 ### 🔴 Prioridad Alta — BLOQUEANTE antes de cualquier deploy
 
-- [ ] **BUG-CRÍTICO-1:** Renombrar `Anoescolarmode.php` → `AnoEscolarModel.php` — falla 100% en Linux (case-sensitive). FATAL.
-- [ ] **BUG-CRÍTICO-2:** Google App Password real expuesto en `.env` — revocar en `myaccount.google.com → Seguridad → Contraseñas de aplicaciones` y regenerar.
-- [ ] **BUG-V-01:** `cobros/formulario_partial.php` — `$this->generateCsrfToken()` en include — `$this` no existe, Fatal Error. Reemplazar con `<?= htmlspecialchars($csrf_token) ?>`.
-- [ ] **BUG-V-05:** `planes/index.php` — `Database::getInstance()` + raw SQL en `foreach` de vista — N+1 + lógica en vista. Mover JOIN a `PlanModel`, pasar `$plan['colegios_activos']` desde el controller.
-- [ ] **BUG-V-15:** `notificaciones/index.php` — contraseña SMTP renderizada en `value=""` del input — visible en el DOM. Eliminar el value; usar solo placeholder `(guardada)`.
-
-### 🟡 Prioridad Media — corregir antes del lanzamiento
+> ⚠️ Solo queda la **Oleada 4** (XSS sistémico) para alcanzar el mínimo seguro de deploy.
 
 **Bugs de Views B8a — Lotes 1-2:**
 - [ ] **BUG-V-02:** `instituciones/index.php` — `require app.php` dentro del `foreach` (N requires). Usar `$appUrl` ya definido.
@@ -136,20 +135,20 @@ Browser → public/.htaccess → public/index.php (Front Controller)
 **Bugs B1-B3:**
 - [ ] **BUG-2:** `eliminar()` estudiante via GET sin CSRF → POST + token.
 - [ ] **BUG-3:** Validación foto solo por extensión → agregar `finfo` MIME real.
-- [ ] **BUG-4:** Sin UNIQUE constraint en `anos_escolares`. Migración necesaria.
-- [ ] **MEJORA-1:** `.env` usa `DB_NAME`/`DB_USER` pero `database.php` espera `DB_DATABASE`/`DB_USERNAME` — conexión falla en producción.
-- [ ] **MEJORA-2:** `debug=true` por defecto en `app.php` → cambiar a `false`.
-- [ ] **MEJORA-3:** `CRON_SECRET` hardcodeado en `constants.php` → mover a `.env`.
-- [ ] **MEJORA-4:** Ruta uploads inconsistente: `app.php` vs `EstudianteController`.
-- [ ] **MEJORA-5:** Falta guard en `index.php` para líneas `.env` sin `=`.
-- [ ] **MEJORA-6:** `Database.php` no loguea errores de conexión en producción.
-- [ ] **MEJORA-7:** `Router::ejecutar()` hace `die()` → mostrar 404.
-- [ ] **MEJORA-8:** `SmtpClient` SSL con `verify_peer=false` → `true` en producción.
-- [ ] **MEJORA-9:** Dos convenciones POST en routes: `/crear` vs `/guardar` → unificar (Patrón A, ADR-011).
-- [ ] **MEJORA-10:** Comentario obsoleto en `routes/web.php` → eliminar.
+- [ ] **BUG-4:** Sin UNIQUE constraint en `anos_escolares`. Migración necesaria. *(Oleada 8)*
+- ~~**MEJORA-1:** `.env` usa `DB_NAME`/`DB_USER` — corregido a `DB_DATABASE`/`DB_USERNAME`.~~ ✅ Oleada 2
+- ~~**MEJORA-2:** `debug=true` en `app.php` — corregido a `false` con `filter_var`.~~ ✅ Oleada 2
+- ~~**MEJORA-3:** `CRON_SECRET` hardcodeado — movido a `.env`.~~ ✅ Oleada 2
+- ~~**MEJORA-4:** Ruta uploads inconsistente — unificada en `app.php` y `EstudianteController`.~~ ✅ Oleada 2
+- ~~**MEJORA-5:** Falta guard en `index.php` para líneas `.env` sin `=` — corregido.~~ ✅ Oleada 2
+- ~~**MEJORA-6:** `Database.php` no loguea errores en producción — `error_log` agregado.~~ ✅ Oleada 2
+- [ ] **MEJORA-7:** `Router::ejecutar()` hace `die()` → mostrar 404. *(Oleada 10)*
+- [ ] **MEJORA-8:** `SmtpClient` SSL con `verify_peer=false` → `true` en producción. *(Oleada 10)*
+- [ ] **MEJORA-9:** Dos convenciones POST en routes: `/crear` vs `/guardar` → unificar (Patrón A, ADR-011). *(Oleada 10)*
+- [ ] **MEJORA-10:** Comentario obsoleto en `routes/web.php` → eliminar. *(Oleada 10)*
 
 **Mejoras de Views B8a:**
-- [ ] **MEJ-V8-01:** `require app.php` en cada vista — sistémico. Resolver con `APP_URL` global (relacionado con MEJORA-3/4).
+- ~~**MEJ-V8-01:** `require app.php` en cada vista — resuelto con `APP_URL` global en Oleada 1.~~ ✅
 - [ ] **MEJ-V8-02:** `instituciones/usuarios.php` — `addslashes()` en JS. Reemplazar con `json_encode()`.
 - [ ] **MEJ-V8-03:** `instituciones/crear.php` — contraseña `Colegio2024!` hardcodeada. Generar en controller. (Relacionado con BUG-V-13.)
 - [ ] **MEJ-V8-04:** `cobros/masivo.php` — typo `actualizarTodosLosMontol` → `actualizarTodosLosMontos`.
@@ -213,11 +212,12 @@ Browser → public/.htaccess → public/index.php (Front Controller)
 
 | ID | Fecha | Problema | Impacto | Solución Propuesta | Estado |
 |----|-------|----------|---------|-------------------|--------|
-| BUG-CRÍTICO-1 | 2026-03-09 | `Anoescolarmode.php` nombre incorrecto | FATAL en Linux | Renombrar a `AnoEscolarModel.php` | 🔴 Urgente |
-| BUG-CRÍTICO-2 | 2026-03-09 | Google App Password expuesto en `.env` | Credencial comprometida | Revocar y regenerar | 🔴 Urgente |
-| BUG-V-01 | 2026-03-09 | `$this->generateCsrfToken()` en partial include | Fatal Error en cobros | Usar `$csrf_token` del controller | 🔴 Urgente |
-| BUG-V-05 | 2026-03-09 | `Database::getInstance()` en `foreach` de vista | N+1 + lógica en vista | JOIN en PlanModel | 🔴 Urgente |
-| BUG-V-15 | 2026-03-09 | Contraseña SMTP en `value=""` del input HTML | App Password visible en DOM | Eliminar value, solo placeholder | 🔴 Urgente |
+| BUG-CRÍTICO-1 | 2026-03-09 | `Anoescolarmode.php` nombre incorrecto | FATAL en Linux | Renombrar a `AnoEscolarModel.php` | ✅ Oleada 1 |
+| BUG-CRÍTICO-2 | 2026-03-09 | Google App Password expuesto en `.env` | Credencial comprometida | Revocar y regenerar | ✅ Oleada 0 |
+| BUG-V-01 | 2026-03-09 | `$this->generateCsrfToken()` en partial include | Fatal Error en cobros | Usar `$csrf_token` del controller | ✅ Oleada 1 |
+| BUG-V-05 | 2026-03-09 | `Database::getInstance()` en `foreach` de vista | N+1 + lógica en vista | JOIN en PlanModel | 🟡 Oleada 5 |
+| BUG-V-15 | 2026-03-09 | Contraseña SMTP en `value=""` del input HTML | App Password visible en DOM | Eliminar value, solo placeholder | ✅ Oleada 1 |
+| BUG-B9-02 | 2026-03-09 | URL Cloudflare obfuscada en layout — botón roto | Funcional crítico | `mailto:soporte@edusaas.do` + eliminar script CF | ✅ Oleada 3 |
 | BUG-V-06 | 2026-03-09 | `actualizarMonto()` busca `#sel-tipo` inexistente | Monto no se actualiza | Leer radio `input[name="tipo_facturacion"]:checked` | 🟡 |
 | BUG-V-07 | 2026-03-09 | Email/web empresa hardcodeados en recibo_cobro | Config ignorada en documento | Usar `$_cfg_email_c` y `$_cfg_web` | 🟡 |
 | BUG-V-09 | 2026-03-09 | Email/web empresa hardcodeados en pagos/recibo | Config ignorada en documento | Usar variables de ConfigModel | 🟡 |
@@ -275,6 +275,55 @@ Browser → public/.htaccess → public/index.php (Front Controller)
 ## 📅 LOG DE SESIONES
 
 > Las sesiones más recientes van primero.
+
+---
+
+### Sesión C-003 — 2026-03-10
+**Tipo:** Correcciones activas
+**Archivos corregidos:** 6
+**Duración estimada:** 1.5 horas
+
+**Trabajado:**
+- **Oleada 2 completa** — `app.php`, `constants.php`, `index.php`, `Database.php`, `EstudianteController.php`
+  - MEJORA-2: `APP_DEBUG` default `false` con `filter_var(…, FILTER_VALIDATE_BOOLEAN)` correcto para strings
+  - MEJORA-3: `CRON_SECRET` movido a `.env` con `error_log` si no está definido
+  - MEJORA-4: path de uploads unificado entre `app.php` (`public/uploads/`) y `EstudianteController` (`$this->config['upload']['path']`)
+  - MEJORA-5: guard `if (!str_contains($linea, '=')) continue` en parser `.env`
+  - MEJORA-6: `error_log('[EduSaaS] Error de conexión a BD: ...')` antes del `die()` en producción
+- **Oleada 3 completa** — `views/layouts/main.php`
+  - BUG-B9-02: `mailto:soporte@edusaas.do` restaurado, script `<script data-cfasync>` Cloudflare eliminado
+  - MEJ-B9-01: `flashHtml()` con `strip_tags()` + whitelist `<strong><em><a><br><span>`
+  - MEJ-B9-03: `$_color` del banner Trial validado con `preg_match('/^#[0-9a-fA-F]{3,6}$/')`
+  - Archivo reconstruido completo (upload original estaba truncado — faltaba el cierre JS + body + html)
+- Se revisó `.env` subido por el developer: App Password aún activa → alerta emitida
+
+**Decisiones:**
+- `filter_var(..., FILTER_VALIDATE_BOOLEAN)` es el fix correcto para `APP_DEBUG` — sin él el string `"false"` del `.env` evalúa como `true` en PHP
+- Fallback en `subirFoto()`: si `config['upload']['path']` no está disponible, sigue funcionando con ruta original
+
+**Para la próxima sesión (C-004):**
+1. Confirmar App Password de Gmail revocada y nueva generada
+2. Confirmar `.env` tiene `APP_DEBUG=false` y `CRON_SECRET=<valor real>` (generar con `php -r "echo bin2hex(random_bytes(24));"`)
+3. Subir Ronda 1 de Oleada 4: `instituciones/index.php` + `instituciones/ver.php` + `cobros/recibo_cobro.php`
+
+---
+
+### Sesión C-002 — 2026-03-09
+**Tipo:** Correcciones activas — Oleadas 0 y 1
+
+**Trabajado:**
+- Oleada 0: App Password Gmail revocada y regenerada, `.gitignore` verificado, commit `pre-fixes` creado
+- Oleada 1: `AnoEscolarModel.php` renombrado + referencias actualizadas, `APP_URL` definido en `constants.php` y aplicado en 5 vistas, CSRF en `cobros/formulario_partial.php`, password SMTP eliminada del DOM, URL Cloudflare en layout (completada en O3)
+
+---
+
+### Sesión C-001 — 2026-03-09
+**Tipo:** Planificación
+
+**Trabajado:**
+- Creación de `CORRECCIONES_LOG.md` como tercer documento de seguimiento
+- Corrección de `BITACORA.md` — encabezado y tabla resumen desactualizados
+- Protocolo definido: máx. 3 archivos/ronda, flujo fijo lectura→corrección→descarga→log
 
 ---
 
