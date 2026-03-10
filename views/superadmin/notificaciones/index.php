@@ -1,5 +1,5 @@
 <?php
-$appUrl  = (require __DIR__ . '/../../../../config/app.php')['url'];
+$appUrl  = APP_URL; // ADR-016: constante global, no require por vista
 // Leer config SMTP actual del .env
 $mailCfg  = file_exists(__DIR__ . '/../../../../config/mail.php')
     ? require __DIR__ . '/../../../../config/mail.php'
@@ -83,8 +83,7 @@ $configured = $driver === 'smtp' && !empty($smtpUser) && !empty($smtpPass);
                     <label class="form-label fw-semibold small">Contraseña / App Password</label>
                     <div class="input-group input-group-sm">
                         <input type="password" name="smtp_password" id="smtpPass" class="form-control"
-                               value="<?= htmlspecialchars($smtpPass) ?>"
-                               placeholder="<?= $smtpPass ? '(guardada)' : 'xxxx xxxx xxxx xxxx' ?>"
+                               placeholder="<?= $configured ? '(guardada — dejar vacío para no cambiar)' : 'xxxx xxxx xxxx xxxx' ?>"
                                autocomplete="new-password">
                         <button type="button" class="btn btn-outline-secondary"
                                 onclick="togglePass()"><i class="bi bi-eye" id="eyeIcon"></i></button>
@@ -154,8 +153,8 @@ function togglePass() {
     el.type = el.type === 'password' ? 'text' : 'password';
     ic.className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
 }
-// Mostrar panel si hay error de email
-<?php if (str_contains($_SESSION['flash']['mensaje'] ?? '', 'Error al enviar')): ?>
+// Mostrar panel si el controller detectó error de envío
+<?php if ($mostrar_smtp ?? false): ?>
 document.addEventListener('DOMContentLoaded', () => {
     new bootstrap.Collapse(document.getElementById('smtpPanel'), {show: true});
 });

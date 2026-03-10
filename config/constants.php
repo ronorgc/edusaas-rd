@@ -90,3 +90,12 @@ define('FLASH_INFO',    'info');
 // Ejemplo de uso en cPanel/Linux:
 //   0 8 * * * curl -s "https://tudominio.com/superadmin/cron/avisos-vencimiento?token=CRON_SECRET_AQUI"
 define('CRON_SECRET', 'cron_edusaas_2024_cambia_esto');
+
+// --- URL Base de la Aplicación (ADR-016) ---
+// Centraliza la URL del sistema. Todas las vistas usan APP_URL directamente.
+// Elimina el patrón (require config/app.php)['url'] en cada vista.
+if (!defined('APP_URL')) {
+    $_appCfg = require __DIR__ . '/app.php';
+    define('APP_URL', rtrim($_appCfg['url'] ?? '', '/'));
+    unset($_appCfg);
+}

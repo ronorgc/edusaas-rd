@@ -1,7 +1,7 @@
 <?php
 // Este partial es cargado vía fetch desde cobros/index.php
-// Las variables $inst, $suscActiva, $planes están disponibles
-$appUrl = (require __DIR__ . '/../../../../config/app.php')['url'];
+// Variables disponibles: $inst, $suscActiva, $planes, $csrf_token (pasado por el controller)
+$appUrl = APP_URL; // ADR-016: constante global, no require por vista
 ?>
 
 <!-- Info rápida de la institución -->
@@ -26,7 +26,7 @@ $appUrl = (require __DIR__ . '/../../../../config/app.php')['url'];
 </div>
 
 <form action="<?= $appUrl ?>/superadmin/cobros/procesar" method="POST">
-    <input type="hidden" name="_csrf_token"    value="<?= htmlspecialchars($this->generateCsrfToken() ?? ($_SESSION['csrf_token'] ?? '')) ?>">
+    <input type="hidden" name="_csrf_token"    value="<?= htmlspecialchars($csrf_token ?? '') ?>">
     <input type="hidden" name="institucion_id" value="<?= $inst['id'] ?>">
 
     <!-- Plan -->
