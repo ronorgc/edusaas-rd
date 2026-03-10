@@ -4,6 +4,19 @@
 // =====================================================
 // ✅ Activo     = controller existe y funciona
 // 🔲 Futuro     = comentado, pendiente de desarrollo
+//
+// CONVENCIÓN DE PREFIJOS:
+//   /auth/...           → autenticación
+//   /admin/...          → panel del colegio (ROL_ADMIN o visor)
+//   /superadmin/...     → panel global (ROL_SUPER_ADMIN)
+//   /preinscripcion/... → formulario público del colegio (sin auth)
+//   /registro/...       → preregistro público de colegios (sin auth)
+//
+// ⚠️ REGLA DE ORDEN: Las rutas ESTÁTICAS deben registrarse
+//    SIEMPRE antes que las rutas DINÁMICAS ({id}) del mismo
+//    prefijo. El Router resuelve por orden de registro y
+//    una ruta dinámica captura cualquier segmento, incluyendo
+//    palabras como "exportar", "crear", "editar", etc.
 // =====================================================
 
 // --------------------------------------------------
@@ -16,7 +29,7 @@ $router->get('/registro',         'PreregistroController', 'formulario');
 $router->post('/registro',        'PreregistroController', 'enviar');
 $router->get('/registro/gracias', 'PreregistroController', 'gracias');
 
-// Pre-inscripción de estudiantes por colegio
+// Pre-inscripción de estudiantes por colegio (portal público del colegio)
 $router->get('/preinscripcion/{slug}',               'PreinscripcionController', 'formulario');
 $router->post('/preinscripcion/{slug}/enviar',       'PreinscripcionController', 'enviar');
 $router->get('/preinscripcion/{slug}/gracias/{cod}', 'PreinscripcionController', 'gracias');
@@ -33,23 +46,23 @@ $router->get('/auth/salir-visor', 'AuthController', 'salirVisor');
 $router->get('/', 'AuthController', 'index');
 
 // --------------------------------------------------
-// ✅ DASHBOARD
+// ✅ PANEL DEL COLEGIO — Dashboard
 // --------------------------------------------------
-$router->get('/dashboard', 'DashboardController', 'index');
+$router->get('/admin/dashboard', 'DashboardController', 'index');
 
 // --------------------------------------------------
-// ✅ ESTUDIANTES
+// ✅ PANEL DEL COLEGIO — Estudiantes
 // --------------------------------------------------
-$router->get('/estudiantes',               'EstudianteController', 'index');
-$router->get('/estudiantes/crear',         'EstudianteController', 'crear');
-$router->post('/estudiantes/crear',        'EstudianteController', 'guardar');
-$router->get('/estudiantes/{id}',          'EstudianteController', 'ver');
-$router->get('/estudiantes/{id}/editar',   'EstudianteController', 'editar');
-$router->post('/estudiantes/{id}/editar',  'EstudianteController', 'actualizar');
-$router->get('/estudiantes/{id}/eliminar', 'EstudianteController', 'eliminar');
+$router->get('/admin/estudiantes',               'EstudianteController', 'index');
+$router->get('/admin/estudiantes/crear',         'EstudianteController', 'crear');
+$router->post('/admin/estudiantes/crear',        'EstudianteController', 'guardar');
+$router->get('/admin/estudiantes/{id}',          'EstudianteController', 'ver');
+$router->get('/admin/estudiantes/{id}/editar',   'EstudianteController', 'editar');
+$router->post('/admin/estudiantes/{id}/editar',  'EstudianteController', 'actualizar');
+$router->get('/admin/estudiantes/{id}/eliminar', 'EstudianteController', 'eliminar');
 
 // --------------------------------------------------
-// ✅ PRE-INSCRIPCIONES — Panel admin del colegio
+// ✅ PANEL DEL COLEGIO — Pre-inscripciones (revisión admin)
 // --------------------------------------------------
 $router->get('/admin/preinscripciones',                  'PreinscripcionController', 'adminIndex');
 $router->get('/admin/preinscripciones/{id}',             'PreinscripcionController', 'adminVer');
@@ -57,99 +70,123 @@ $router->post('/admin/preinscripciones/{id}/actualizar', 'PreinscripcionControll
 $router->post('/admin/preinscripciones/{id}/convertir',  'PreinscripcionController', 'adminConvertir');
 
 // --------------------------------------------------
-// 🔲 PROFESORES — Futuro
+// 🔲 PANEL DEL COLEGIO — Profesores (Sprint 2.2)
 // --------------------------------------------------
-// $router->get('/profesores',              'ProfesorController', 'index');
-// $router->get('/profesores/crear',        'ProfesorController', 'crear');
-// $router->post('/profesores/crear',       'ProfesorController', 'guardar');
-// $router->get('/profesores/{id}',         'ProfesorController', 'ver');
-// $router->get('/profesores/{id}/editar',  'ProfesorController', 'editar');
-// $router->post('/profesores/{id}/editar', 'ProfesorController', 'actualizar');
+// $router->get('/admin/profesores',               'ProfesorController', 'index');
+// $router->get('/admin/profesores/crear',         'ProfesorController', 'crear');
+// $router->post('/admin/profesores/crear',        'ProfesorController', 'guardar');
+// $router->get('/admin/profesores/{id}',          'ProfesorController', 'ver');
+// $router->get('/admin/profesores/{id}/editar',   'ProfesorController', 'editar');
+// $router->post('/admin/profesores/{id}/editar',  'ProfesorController', 'actualizar');
 
 // --------------------------------------------------
-// 🔲 MATRÍCULAS — Futuro
+// 🔲 PANEL DEL COLEGIO — Matrículas (Sprint 2.3)
 // --------------------------------------------------
-// $router->get('/matriculas',        'MatriculaController', 'index');
-// $router->get('/matriculas/crear',  'MatriculaController', 'crear');
-// $router->post('/matriculas/crear', 'MatriculaController', 'guardar');
-// $router->get('/matriculas/{id}',   'MatriculaController', 'ver');
+// $router->get('/admin/matriculas',        'MatriculaController', 'index');
+// $router->get('/admin/matriculas/crear',  'MatriculaController', 'crear');
+// $router->post('/admin/matriculas/crear', 'MatriculaController', 'guardar');
+// $router->get('/admin/matriculas/{id}',   'MatriculaController', 'ver');
 
 // --------------------------------------------------
-// 🔲 CALIFICACIONES — Futuro
+// 🔲 PANEL DEL COLEGIO — Calificaciones (Sprint 3.2)
 // --------------------------------------------------
-// $router->get('/calificaciones',                       'CalificacionController', 'index');
-// $router->get('/calificaciones/seccion/{id}',          'CalificacionController', 'porSeccion');
-// $router->post('/calificaciones/guardar',              'CalificacionController', 'guardar');
-// $router->get('/calificaciones/boleta/{matricula_id}', 'CalificacionController', 'boleta');
+// $router->get('/admin/calificaciones',                       'CalificacionController', 'index');
+// $router->get('/admin/calificaciones/seccion/{id}',          'CalificacionController', 'porSeccion');
+// $router->post('/admin/calificaciones/guardar',              'CalificacionController', 'guardar');
+// $router->get('/admin/calificaciones/boleta/{matricula_id}', 'CalificacionController', 'boleta');
 
 // --------------------------------------------------
-// 🔲 ASISTENCIA — Futuro
+// 🔲 PANEL DEL COLEGIO — Asistencia (Sprint 3.1)
 // --------------------------------------------------
-// $router->get('/asistencia',              'AsistenciaController', 'index');
-// $router->get('/asistencia/seccion/{id}', 'AsistenciaController', 'porSeccion');
-// $router->post('/asistencia/registrar',   'AsistenciaController', 'registrar');
-// $router->get('/asistencia/reporte/{id}', 'AsistenciaController', 'reporte');
+// $router->get('/admin/asistencia',              'AsistenciaController', 'index');
+// $router->get('/admin/asistencia/seccion/{id}', 'AsistenciaController', 'porSeccion');
+// $router->post('/admin/asistencia/registrar',   'AsistenciaController', 'registrar');
+// $router->get('/admin/asistencia/reporte/{id}', 'AsistenciaController', 'reporte');
 
 // --------------------------------------------------
-// 🔲 PAGOS Y CUOTAS del colegio — Futuro
+// 🔲 PANEL DEL COLEGIO — Pagos y cuotas (Fase 4)
 // --------------------------------------------------
-// $router->get('/pagos',             'PagoController', 'index');
-// $router->get('/pagos/cuotas',      'PagoController', 'cuotas');
-// $router->post('/pagos/registrar',  'PagoController', 'registrar');
-// $router->get('/pagos/recibo/{id}', 'PagoController', 'recibo');
-// $router->get('/pagos/morosos',     'PagoController', 'morosos');
+// $router->get('/admin/pagos',             'PagoController', 'index');
+// $router->get('/admin/pagos/cuotas',      'PagoController', 'cuotas');
+// $router->post('/admin/pagos/registrar',  'PagoController', 'registrar');
+// $router->get('/admin/pagos/recibo/{id}', 'PagoController', 'recibo');
+// $router->get('/admin/pagos/morosos',     'PagoController', 'morosos');
 
 // --------------------------------------------------
-// 🔲 COMUNICADOS — Futuro
+// 🔲 PANEL DEL COLEGIO — Comunicados (Sprint 3.3)
 // --------------------------------------------------
-// $router->get('/comunicados',        'ComunicadoController', 'index');
-// $router->get('/comunicados/crear',  'ComunicadoController', 'crear');
-// $router->post('/comunicados/crear', 'ComunicadoController', 'guardar');
-// $router->get('/comunicados/{id}',   'ComunicadoController', 'ver');
+// $router->get('/admin/comunicados',        'ComunicadoController', 'index');
+// $router->get('/admin/comunicados/crear',  'ComunicadoController', 'crear');
+// $router->post('/admin/comunicados/crear', 'ComunicadoController', 'guardar');
+// $router->get('/admin/comunicados/{id}',   'ComunicadoController', 'ver');
 
 // --------------------------------------------------
-// 🔲 REPORTES — Futuro
+// 🔲 PANEL DEL COLEGIO — Reportes (Fase 6)
 // --------------------------------------------------
-// $router->get('/reportes',            'ReporteController', 'index');
-// $router->get('/reportes/academico',  'ReporteController', 'academico');
-// $router->get('/reportes/asistencia', 'ReporteController', 'asistencia');
-// $router->get('/reportes/financiero', 'ReporteController', 'financiero');
+// $router->get('/admin/reportes',            'ReporteController', 'index');
+// $router->get('/admin/reportes/academico',  'ReporteController', 'academico');
+// $router->get('/admin/reportes/asistencia', 'ReporteController', 'asistencia');
+// $router->get('/admin/reportes/financiero', 'ReporteController', 'financiero');
 
 // --------------------------------------------------
-// 🔲 ADMINISTRACIÓN DEL COLEGIO — Futuro
+// 🔲 PANEL DEL COLEGIO — Configuración académica (Sprint 2.1)
 // --------------------------------------------------
-// $router->get('/admin/usuarios',              'AdminController', 'usuarios');
-// $router->get('/admin/anos-escolares',        'AdminController', 'anosEscolares');
-// $router->get('/admin/anos-escolares/crear',  'AdminController', 'crearAnoEscolar');
-// $router->post('/admin/anos-escolares/crear', 'AdminController', 'guardarAnoEscolar');
-// $router->get('/admin/secciones',             'AdminController', 'secciones');
-// $router->get('/admin/asignaturas',           'AdminController', 'asignaturas');
-// $router->get('/admin/horarios',              'AdminController', 'horarios');
+// ⚠️ ORDEN CRÍTICO: rutas estáticas PRIMERO, dinámicas ({id}) DESPUÉS.
+// $router->get('/admin/anos-escolares',                    'AdminController', 'anosEscolares');
+// $router->get('/admin/anos-escolares/crear',              'AdminController', 'crearAnoEscolar');
+// $router->post('/admin/anos-escolares/crear',             'AdminController', 'guardarAnoEscolar');
+// $router->get('/admin/anos-escolares/{id}/editar',        'AdminController', 'editarAnoEscolar');
+// $router->post('/admin/anos-escolares/{id}/editar',       'AdminController', 'actualizarAnoEscolar');
+// $router->post('/admin/anos-escolares/{id}/activar',      'AdminController', 'activarAnoEscolar');
+// $router->get('/admin/grados',                            'AdminController', 'grados');
+// $router->get('/admin/secciones',                         'AdminController', 'secciones');
+// $router->get('/admin/secciones/crear',                   'AdminController', 'crearSeccion');
+// $router->post('/admin/secciones/crear',                  'AdminController', 'guardarSeccion');
+// $router->get('/admin/secciones/{id}/editar',             'AdminController', 'editarSeccion');
+// $router->post('/admin/secciones/{id}/editar',            'AdminController', 'actualizarSeccion');
+// $router->post('/admin/secciones/{id}/eliminar',          'AdminController', 'eliminarSeccion');
+// $router->get('/admin/periodos',                          'AdminController', 'periodos');
+// $router->get('/admin/periodos/crear',                    'AdminController', 'crearPeriodo');
+// $router->post('/admin/periodos/crear',                   'AdminController', 'guardarPeriodo');
+// $router->get('/admin/periodos/{id}/editar',              'AdminController', 'editarPeriodo');
+// $router->post('/admin/periodos/{id}/editar',             'AdminController', 'actualizarPeriodo');
+// $router->post('/admin/periodos/{id}/eliminar',           'AdminController', 'eliminarPeriodo');
+// $router->get('/admin/usuarios',                          'AdminController', 'usuarios');
 
 // --------------------------------------------------
 // ✅ SUPER ADMIN — Dashboard y métricas
 // --------------------------------------------------
 $router->get('/superadmin', 'SuperAdminController', 'dashboard');
 
-// Instituciones
-$router->get('/superadmin/instituciones',                              'SuperAdminController', 'instituciones');
-$router->get('/superadmin/instituciones/crear',                        'SuperAdminController', 'crearInstitucionForm');
-$router->post('/superadmin/instituciones/crear',                       'SuperAdminController', 'crearInstitucion');
-$router->get('/superadmin/instituciones/{id}',                         'SuperAdminController', 'verInstitucion');
-$router->get('/superadmin/instituciones/{id}/editar',                  'SuperAdminController', 'editarInstitucionForm');
-$router->post('/superadmin/instituciones/{id}/editar',                 'SuperAdminController', 'editarInstitucion');
-$router->post('/superadmin/instituciones/{id}/suspender',              'SuperAdminController', 'suspenderInstitucion');
-$router->post('/superadmin/instituciones/{id}/reactivar',              'SuperAdminController', 'reactivarInstitucion');
-$router->post('/superadmin/instituciones/{id}/eliminar',               'SuperAdminController', 'eliminarInstitucion');
-$router->post('/superadmin/instituciones/{id}/notas',                  'SuperAdminController', 'guardarNotas');
-$router->post('/superadmin/instituciones/{id}/cambiar-plan',           'SuperAdminController', 'cambiarPlan');
-$router->post('/superadmin/instituciones/{id}/pago',                   'SuperAdminController', 'registrarPago');
-$router->get('/superadmin/instituciones/{id}/revisar',                 'SuperAdminController', 'revisarColegio');
-$router->get('/superadmin/instituciones/{id}/usuarios',                'SuperAdminController', 'usuariosColegio');
-$router->post('/superadmin/instituciones/{id}/usuarios/{uid}/reset',   'SuperAdminController', 'resetPassword');
-$router->post('/superadmin/instituciones/{id}/usuarios/{uid}/toggle',  'SuperAdminController', 'toggleUsuario');
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Instituciones
+// --------------------------------------------------
+// ⚠️ ORDEN CRÍTICO: rutas estáticas PRIMERO, dinámicas ({id}) DESPUÉS.
+$router->get('/superadmin/instituciones',        'SuperAdminController', 'instituciones');
+$router->get('/superadmin/instituciones/crear',  'SuperAdminController', 'crearInstitucionForm');
+$router->post('/superadmin/instituciones/crear', 'SuperAdminController', 'crearInstitucion');
 
-// Planes
+// Exportar CSV (estática — debe ir ANTES de /{id}) ← Bug-1 corregido
+$router->get('/superadmin/instituciones/exportar', 'SuperAdminController', 'exportarInstituciones');
+
+// Detalle y edición por {id} (dinámicas — van DESPUÉS de las estáticas)
+$router->get('/superadmin/instituciones/{id}',                        'SuperAdminController', 'verInstitucion');
+$router->get('/superadmin/instituciones/{id}/editar',                 'SuperAdminController', 'editarInstitucionForm');
+$router->post('/superadmin/instituciones/{id}/editar',                'SuperAdminController', 'editarInstitucion');
+$router->post('/superadmin/instituciones/{id}/suspender',             'SuperAdminController', 'suspenderInstitucion');
+$router->post('/superadmin/instituciones/{id}/reactivar',             'SuperAdminController', 'reactivarInstitucion');
+$router->post('/superadmin/instituciones/{id}/eliminar',              'SuperAdminController', 'eliminarInstitucion');
+$router->post('/superadmin/instituciones/{id}/notas',                 'SuperAdminController', 'guardarNotas');
+$router->post('/superadmin/instituciones/{id}/cambiar-plan',          'SuperAdminController', 'cambiarPlan');
+$router->post('/superadmin/instituciones/{id}/pago',                  'SuperAdminController', 'registrarPago');
+$router->get('/superadmin/instituciones/{id}/revisar',                'SuperAdminController', 'revisarColegio');
+$router->get('/superadmin/instituciones/{id}/usuarios',               'SuperAdminController', 'usuariosColegio');
+$router->post('/superadmin/instituciones/{id}/usuarios/{uid}/reset',  'SuperAdminController', 'resetPassword');
+$router->post('/superadmin/instituciones/{id}/usuarios/{uid}/toggle', 'SuperAdminController', 'toggleUsuario');
+
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Planes
+// --------------------------------------------------
 $router->get('/superadmin/planes',              'SuperAdminController', 'planes');
 $router->get('/superadmin/planes/crear',        'SuperAdminController', 'crearPlanForm');
 $router->post('/superadmin/planes/crear',       'SuperAdminController', 'crearPlan');
@@ -157,7 +194,9 @@ $router->get('/superadmin/planes/{id}/editar',  'SuperAdminController', 'editarP
 $router->post('/superadmin/planes/{id}/editar', 'SuperAdminController', 'editarPlan');
 $router->post('/superadmin/planes/{id}/toggle', 'SuperAdminController', 'togglePlan');
 
-// Cobros y facturación
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Cobros y facturación
+// --------------------------------------------------
 $router->get('/superadmin/cobros',                  'SuperAdminController', 'cobros');
 $router->get('/superadmin/cobros/masivo',           'SuperAdminController', 'renovacionMasiva');
 $router->post('/superadmin/cobros/masivo/procesar', 'SuperAdminController', 'procesarRenovacionMasiva');
@@ -165,19 +204,27 @@ $router->get('/superadmin/cobros/formulario',       'SuperAdminController', 'for
 $router->post('/superadmin/cobros/procesar',        'SuperAdminController', 'procesarCobro');
 $router->get('/superadmin/cobros/recibo/{id}',      'SuperAdminController', 'reciboCobro');
 
-// Ingresos y reportes
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Ingresos y reportes
+// --------------------------------------------------
+// ⚠️ ORDEN CRÍTICO: /exportar va ANTES de /{id}.
 $router->get('/superadmin/ingresos/exportar', 'SuperAdminController', 'exportarIngresos');
 $router->get('/superadmin/ingresos',          'SuperAdminController', 'ingresos');
 $router->get('/superadmin/pagos/{id}/recibo', 'SuperAdminController', 'recibo');
 
-// Solicitudes de preregistro de colegios
-$router->get('/superadmin/preregistros',                   'PreregistroController', 'lista');
-$router->get('/superadmin/preregistros/{id}',              'PreregistroController', 'ver');
-$router->post('/superadmin/preregistros/{id}/aprobar',     'PreregistroController', 'aprobar');
-$router->post('/superadmin/preregistros/{id}/rechazar',    'PreregistroController', 'rechazar');
-$router->post('/superadmin/preregistros/{id}/contactado',  'PreregistroController', 'marcarContactado');
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Solicitudes de preregistro de colegios
+// --------------------------------------------------
+$router->get('/superadmin/preregistros',                  'PreregistroController', 'lista');
+$router->get('/superadmin/preregistros/{id}',             'PreregistroController', 'ver');
+$router->post('/superadmin/preregistros/{id}/aprobar',    'PreregistroController', 'aprobar');
+$router->post('/superadmin/preregistros/{id}/rechazar',   'PreregistroController', 'rechazar');
+$router->post('/superadmin/preregistros/{id}/contactado', 'PreregistroController', 'marcarContactado');
 
-// Usuarios superadmin
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Usuarios superadmin
+// --------------------------------------------------
+// ⚠️ ORDEN CRÍTICO: /crear va ANTES de /{id}.
 $router->get('/superadmin/usuarios',                'SuperAdminController', 'usuariosSuperAdmin');
 $router->get('/superadmin/usuarios/crear',          'SuperAdminController', 'crearUsuarioSAForm');
 $router->post('/superadmin/usuarios/crear',         'SuperAdminController', 'crearUsuarioSA');
@@ -186,33 +233,73 @@ $router->post('/superadmin/usuarios/{id}/editar',   'SuperAdminController', 'edi
 $router->post('/superadmin/usuarios/{id}/toggle',   'SuperAdminController', 'toggleUsuarioSA');
 $router->post('/superadmin/usuarios/{id}/eliminar', 'SuperAdminController', 'eliminarUsuarioSA');
 
-// Notificaciones y SMTP
-$router->get('/superadmin/notificaciones',                       'SuperAdminController', 'notificaciones');
-$router->post('/superadmin/notificaciones/enviar-vencimientos',  'SuperAdminController', 'enviarAvisosVencimiento');
-$router->post('/superadmin/notificaciones/enviar-individual',    'SuperAdminController', 'enviarIndividual');
-$router->post('/superadmin/notificaciones/smtp-guardar',         'SuperAdminController', 'smtpGuardar');
-$router->post('/superadmin/notificaciones/smtp-test',            'SuperAdminController', 'smtpTest');
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Notificaciones y SMTP
+// --------------------------------------------------
+$router->get('/superadmin/notificaciones',                      'SuperAdminController', 'notificaciones');
+$router->post('/superadmin/notificaciones/enviar-vencimientos', 'SuperAdminController', 'enviarAvisosVencimiento');
+$router->post('/superadmin/notificaciones/enviar-individual',   'SuperAdminController', 'enviarIndividual');
+$router->post('/superadmin/notificaciones/smtp-guardar',        'SuperAdminController', 'smtpGuardar');
+$router->post('/superadmin/notificaciones/smtp-test',           'SuperAdminController', 'smtpTest');
 
-// Export instituciones
-$router->get('/superadmin/instituciones/exportar', 'SuperAdminController', 'exportarInstituciones');
-
-// Salud del sistema
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Salud del sistema
+// --------------------------------------------------
 $router->get('/superadmin/salud',  'SuperAdminController', 'saludSistema');
 $router->post('/superadmin/salud', 'SuperAdminController', 'saludSistema');
 
-// Cron recordatorio vencimiento
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Cron: recordatorio vencimiento
+// --------------------------------------------------
 $router->get('/superadmin/cron/avisos-vencimiento',  'SuperAdminController', 'cronAvisosVencimiento');
 $router->post('/superadmin/cron/avisos-vencimiento', 'SuperAdminController', 'cronAvisosVencimiento');
 
-// Desbloquear usuario
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Utilidades
+// --------------------------------------------------
 $router->post('/superadmin/desbloquear-usuario', 'SuperAdminController', 'desbloquearUsuario');
+$router->get('/superadmin/emails',               'SuperAdminController', 'emailsLog');
+$router->get('/superadmin/log',                  'SuperAdminController', 'logActividad');
 
-// Log de emails
-$router->get('/superadmin/emails', 'SuperAdminController', 'emailsLog');
-
-// Log de actividad
-$router->get('/superadmin/log', 'SuperAdminController', 'logActividad');
-
-// Configuración del sistema
+// --------------------------------------------------
+// ✅ SUPER ADMIN — Configuración del sistema
+// --------------------------------------------------
 $router->get('/superadmin/configuracion',  'SuperAdminController', 'configuracion');
 $router->post('/superadmin/configuracion', 'SuperAdminController', 'guardarConfiguracion');
+
+// =====================================================
+// FRAGMENTO — routes/web.php
+// Sprint 2.1 — Estructura Académica (AdminController)
+// =====================================================
+// INSTRUCCIÓN: Agregar este bloque en routes/web.php
+// dentro de la sección "// ── PANEL ADMIN INSTITUCIÓN ──"
+// DESPUÉS de las rutas del dashboard y estudiantes.
+// =====================================================
+
+// ── AÑOS ESCOLARES ────────────────────────────────────
+$router->get('/admin/anos-escolares',                 'AdminController', 'anosEscolares');
+$router->get('/admin/anos-escolares/crear',           'AdminController', 'crearAnoEscolar');
+$router->post('/admin/anos-escolares/guardar',        'AdminController', 'guardarAnoEscolar');
+$router->get('/admin/anos-escolares/{id}/editar',     'AdminController', 'editarAnoEscolar');
+$router->post('/admin/anos-escolares/{id}/actualizar', 'AdminController', 'actualizarAnoEscolar');
+$router->post('/admin/anos-escolares/{id}/activar',   'AdminController', 'activarAnoEscolar');
+$router->post('/admin/anos-escolares/{id}/eliminar',  'AdminController', 'eliminarAnoEscolar');
+
+// ── GRADOS (solo lectura — datos seed MINERD) ─────────
+$router->get('/admin/grados',                         'AdminController', 'grados');
+
+// ── SECCIONES ─────────────────────────────────────────
+$router->get('/admin/secciones',                      'AdminController', 'secciones');
+$router->get('/admin/secciones/crear',                'AdminController', 'crearSeccion');
+$router->post('/admin/secciones/guardar',             'AdminController', 'guardarSeccion');
+$router->get('/admin/secciones/{id}/editar',          'AdminController', 'editarSeccion');
+$router->post('/admin/secciones/{id}/actualizar',     'AdminController', 'actualizarSeccion');
+$router->post('/admin/secciones/{id}/eliminar',       'AdminController', 'eliminarSeccion');
+
+// ── PERÍODOS DE EVALUACIÓN ────────────────────────────
+$router->get('/admin/periodos',                       'AdminController', 'periodos');
+$router->get('/admin/periodos/crear',                 'AdminController', 'crearPeriodo');
+$router->post('/admin/periodos/guardar',              'AdminController', 'guardarPeriodo');
+$router->get('/admin/periodos/{id}/editar',           'AdminController', 'editarPeriodo');
+$router->post('/admin/periodos/{id}/actualizar',      'AdminController', 'actualizarPeriodo');
+$router->post('/admin/periodos/{id}/eliminar',        'AdminController', 'eliminarPeriodo');

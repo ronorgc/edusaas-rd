@@ -1,5 +1,5 @@
 <?php
-$appUrl = (require __DIR__ . '/../../../config/app.php')['url'];
+$appUrl = (require __DIR__ . '/../../../../config/app.php')['url'];
 $estadoConfig = [
     'pendiente'   => ['Pendiente',    'badge-vencida',                          'bi-hourglass-split'],
     'en_revision' => ['En revisión',  'bg-info text-white badge',               'bi-eye-fill'],

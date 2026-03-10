@@ -368,29 +368,29 @@ if ($_usuario_sesion) {
     <!-- ── Menú del colegio (admin, profesor, padre, estudiante, o super admin en modo visor) ── -->
     <div class="sidebar-section">Principal</div>
     <ul class="sidebar-menu">
-        <li><a href="<?= $_url_base ?>/dashboard" class="<?= isActive('/dashboard') ?>">
+        <li><a href="<?= $_url_base ?>/admin/dashboard" class="<?= isActive('/admin/dashboard') ?>">
             <i class="bi bi-grid-1x2-fill"></i> Dashboard
         </a></li>
     </ul>
 
     <div class="sidebar-section">Académico</div>
     <ul class="sidebar-menu">
-        <li><a href="<?= $_url_base ?>/estudiantes" class="<?= isActive('/estudiantes') ?>">
+        <li><a href="<?= $_url_base ?>/admin/estudiantes" class="<?= isActive('/admin/estudiantes') ?>">
             <i class="bi bi-people-fill"></i> Estudiantes
         </a></li>
         <li><a href="<?= $_url_base ?>/admin/preinscripciones" class="<?= isActive('/admin/preinscripciones') ?>">
             <i class="bi bi-inbox-fill"></i> Pre-inscripciones
         </a></li>
-        <li><a href="<?= $_url_base ?>/profesores" class="<?= isActive('/profesores') ?>">
+        <li><a href="<?= $_url_base ?>/admin/profesores" class="<?= isActive('/admin/profesores') ?>">
             <i class="bi bi-person-workspace"></i> Profesores
         </a></li>
-        <li><a href="<?= $_url_base ?>/matriculas" class="<?= isActive('/matriculas') ?>">
+        <li><a href="<?= $_url_base ?>/admin/matriculas" class="<?= isActive('/admin/matriculas') ?>">
             <i class="bi bi-journal-check"></i> Matrículas
         </a></li>
-        <li><a href="<?= $_url_base ?>/calificaciones" class="<?= isActive('/calificaciones') ?>">
+        <li><a href="<?= $_url_base ?>/admin/calificaciones" class="<?= isActive('/admin/calificaciones') ?>">
             <i class="bi bi-star-fill"></i> Calificaciones
         </a></li>
-        <li><a href="<?= $_url_base ?>/asistencia" class="<?= isActive('/asistencia') ?>">
+        <li><a href="<?= $_url_base ?>/admin/asistencia" class="<?= isActive('/admin/asistencia') ?>">
             <i class="bi bi-calendar-check-fill"></i> Asistencia
         </a></li>
     </ul>
@@ -398,13 +398,13 @@ if ($_usuario_sesion) {
     <?php if (in_array($_rol_id, [ROL_ADMIN]) || VisorMiddleware::estaActivo()): ?>
     <div class="sidebar-section">Administración</div>
     <ul class="sidebar-menu">
-        <li><a href="<?= $_url_base ?>/pagos" class="<?= isActive('/pagos') ?>">
+        <li><a href="<?= $_url_base ?>/admin/pagos" class="<?= isActive('/admin/pagos') ?>">
             <i class="bi bi-cash-stack"></i> Pagos y Cuotas
         </a></li>
-        <li><a href="<?= $_url_base ?>/comunicados" class="<?= isActive('/comunicados') ?>">
+        <li><a href="<?= $_url_base ?>/admin/comunicados" class="<?= isActive('/admin/comunicados') ?>">
             <i class="bi bi-megaphone-fill"></i> Comunicados
         </a></li>
-        <li><a href="<?= $_url_base ?>/reportes" class="<?= isActive('/reportes') ?>">
+        <li><a href="<?= $_url_base ?>/admin/reportes" class="<?= isActive('/admin/reportes') ?>">
             <i class="bi bi-bar-chart-fill"></i> Reportes
         </a></li>
         <?php if (!VisorMiddleware::estaActivo()): ?>
@@ -493,7 +493,7 @@ if ($_usuario_sesion) {
         ][$flash['tipo']] ?? 'alert-info';
     ?>
     <div class="flash-alert alert <?= $tipoClase ?>" id="flash-msg" role="alert">
-        <?= htmlspecialchars($flash['mensaje']) ?>
+        <?= $flash['mensaje'] /* HTML interno del sistema — nunca input de usuario sin sanitizar */ ?>
     </div>
     <?php endif; ?>
 
@@ -516,8 +516,7 @@ if ($_usuario_sesion) {
                 </div>
             </div>
             <?php if (($_SESSION['rol_id']??0) !== ROL_SUPER_ADMIN): ?>
-            <a href="mailto:<?= htmlspecialchars(ConfigModel::get('empresa_email','soporte@edusaas.do')) ?>"
-               class="btn btn-sm" style="background:<?= $_color ?>;color:#fff;white-space:nowrap">
+            <a href="/cdn-cgi/l/email-protection#99a5a6a4b9f1edf4f5eae9fcfaf0f8f5faf1f8ebeab1daf6f7fff0fed4f6fdfcf5a3a3fefcedb1befcf4e9ebfceaf8c6fcf4f8f0f5beb5beeaf6e9f6ebedfcd9fcfdeceaf8f8eab7fdf6beb0b0b9a6a7" class="btn btn-sm" style="background:<?= $_color ?>;color:#fff;white-space:nowrap">
                 Contratar plan →
             </a>
             <?php endif; ?>
@@ -532,7 +531,7 @@ if ($_usuario_sesion) {
 </div>
 
 <!-- Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
     // Cerrar flash automáticamente
     const flash = document.getElementById('flash-msg');
@@ -544,10 +543,4 @@ if ($_usuario_sesion) {
         }, 4000);
     }
 
-    // Toggle sidebar en móvil
-    document.getElementById('toggle-sidebar')?.addEventListener('click', () => {
-        document.getElementById('sidebar').classList.toggle('open');
-    });
-</script>
-</body>
-</html>
+    // Toggle sideba

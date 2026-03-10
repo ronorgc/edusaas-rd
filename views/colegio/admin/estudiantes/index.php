@@ -1,4 +1,4 @@
-<?php $appUrl = (require __DIR__ . '/../../../config/app.php')['url']; ?>
+<?php $appUrl = (require __DIR__ . '/../../../../config/app.php')['url']; ?>
 
 <!-- Stats -->
 <div class="row g-3 mb-4">
@@ -31,7 +31,7 @@
 <!-- Toolbar -->
 <div class="card mb-3">
     <div class="card-body py-2">
-        <form method="GET" action="<?= $appUrl ?>/estudiantes" class="row g-2 align-items-center">
+        <form method="GET" action="<?= $appUrl ?>/admin/estudiantes" class="row g-2 align-items-center">
             <div class="col-md-4">
                 <div class="input-group">
                     <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
@@ -63,7 +63,7 @@
             <div class="col-md-2 d-flex gap-2">
                 <button type="submit" class="btn btn-primary flex-fill"><i class="bi bi-funnel"></i></button>
                 <?php if ($filtros['busqueda'] || $filtros['grado_id'] || $filtros['seccion_id']): ?>
-                <a href="<?= $appUrl ?>/estudiantes" class="btn btn-outline-secondary">✕</a>
+                <a href="<?= $appUrl ?>/admin/estudiantes" class="btn btn-outline-secondary">✕</a>
                 <?php endif; ?>
             </div>
         </form>
@@ -77,7 +77,7 @@
             <i class="bi bi-people-fill me-2 text-primary"></i>Estudiantes
             <span class="badge bg-primary ms-1"><?= count($estudiantes) ?></span>
         </span>
-        <a href="<?= $appUrl ?>/estudiantes/crear" class="btn btn-primary btn-sm">
+        <a href="<?= $appUrl ?>/admin/estudiantes/crear" class="btn btn-primary btn-sm">
             <i class="bi bi-plus-lg me-1"></i>Nuevo Estudiante
         </a>
     </div>
@@ -86,7 +86,7 @@
         <div class="text-center py-5">
             <i class="bi bi-person-x fs-1 text-muted opacity-50 d-block mb-2"></i>
             <p class="text-muted">No se encontraron estudiantes.</p>
-            <a href="<?= $appUrl ?>/estudiantes/crear" class="btn btn-primary">
+            <a href="<?= $appUrl ?>/admin/estudiantes/crear" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-1"></i>Registrar primer estudiante
             </a>
         </div>
@@ -117,7 +117,7 @@
                     ];
                     $est = $estadoMap[$e['matricula_estado'] ?? ''] ?? ['Sin matrícula', 'bg-light text-muted badge'];
                 ?>
-                <tr onclick="window.location='<?= $appUrl ?>/estudiantes/<?= $e['id'] ?>'" style="cursor:pointer">
+                <tr onclick="window.location='<?= $appUrl ?>/admin/estudiantes/<?= $e['id'] ?>'" style="cursor:pointer">
                     <td>
                         <?php if ($e['foto']): ?>
                         <img src="<?= htmlspecialchars($e['foto']) ?>" class="rounded-circle"
@@ -159,9 +159,9 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="<?= $appUrl ?>/estudiantes/<?= $e['id'] ?>">
+                                <li><a class="dropdown-item" href="<?= $appUrl ?>/admin/estudiantes/<?= $e['id'] ?>">
                                     <i class="bi bi-eye me-2"></i>Ver ficha</a></li>
-                                <li><a class="dropdown-item" href="<?= $appUrl ?>/estudiantes/<?= $e['id'] ?>/editar">
+                                <li><a class="dropdown-item" href="<?= $appUrl ?>/admin/estudiantes/<?= $e['id'] ?>/editar">
                                     <i class="bi bi-pencil me-2"></i>Editar</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger"

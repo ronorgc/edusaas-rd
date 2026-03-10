@@ -1,0 +1,34 @@
+﻿# Credenciales y configuración local
+.env
+.env.local
+.env.backup
+
+# Logs
+storage/logs/
+*.log
+
+# Archivos temporales y de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# SQL dumps y backups
+*.sql
+database/*.sql
+
+# Uploads de usuarios (no van al repo)
+storage/uploads/
+public/uploads/
+
+# Archivos de prueba
+public/tes.php
+*.test.php
+
+# IDE y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencias si usas composer en el futuro
+/vendor/composer/

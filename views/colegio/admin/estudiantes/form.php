@@ -1,5 +1,5 @@
 <?php
-$appUrl  = (require __DIR__ . '/../../../config/app.php')['url'];
+$appUrl  = (require __DIR__ . '/../../../../config/app.php')['url'];
 $e       = $estudiante;
 $esEdit  = $modoEdicion && $e;
 $action  = $esEdit

@@ -23,7 +23,7 @@ class AuthController extends BaseController
         if (!empty($_SESSION['usuario_id'])) {
             $destino = ($_SESSION['rol_id'] === ROL_SUPER_ADMIN)
                 ? '/superadmin'
-                : '/dashboard';
+                : '/admin/dashboard';   // ← corregido
             $this->redirect($destino);
         } else {
             $this->redirect('/auth/login');
@@ -35,7 +35,7 @@ class AuthController extends BaseController
         if (!empty($_SESSION['usuario_id'])) {
             $destino = ($_SESSION['rol_id'] === ROL_SUPER_ADMIN)
                 ? '/superadmin'
-                : '/dashboard';
+                : '/admin/dashboard';   // ← corregido
             $this->redirect($destino);
         }
 
@@ -144,15 +144,15 @@ class AuthController extends BaseController
 
         // Actualizar último acceso y limpiar bloqueo
         $this->usuarioModel->update($usuario['id'], [
-            'ultimo_acceso'    => date('Y-m-d H:i:s'),
-            'intentos_fallidos'=> 0,
-            'bloqueado_hasta'  => null,
+            'ultimo_acceso'     => date('Y-m-d H:i:s'),
+            'intentos_fallidos' => 0,
+            'bloqueado_hasta'   => null,
         ]);
 
         // Redirigir según rol
         $destino = ($usuario['rol_id'] === ROL_SUPER_ADMIN)
             ? '/superadmin'
-            : '/dashboard';
+            : '/admin/dashboard';   // ← corregido
 
         $this->redirect($destino);
     }
@@ -199,16 +199,16 @@ class AuthController extends BaseController
         // Regenerar ID de sesión para prevenir session fixation
         session_regenerate_id(true);
 
-        $_SESSION['usuario_id']    = $usuario['id'];
-        $_SESSION['usuario']       = [
-            'id'       => $usuario['id'],
-            'nombres'  => $usuario['nombres'],
-            'apellidos'=> $usuario['apellidos'],
-            'username' => $usuario['username'],
-            'email'    => $usuario['email'],
-            'foto'     => $usuario['foto'],
+        $_SESSION['usuario_id']     = $usuario['id'];
+        $_SESSION['usuario']        = [
+            'id'        => $usuario['id'],
+            'nombres'   => $usuario['nombres'],
+            'apellidos' => $usuario['apellidos'],
+            'username'  => $usuario['username'],
+            'email'     => $usuario['email'],
+            'foto'      => $usuario['foto'],
         ];
-        $_SESSION['rol_id']        = $usuario['rol_id'];
-        $_SESSION['institucion_id']= $usuario['institucion_id'];
+        $_SESSION['rol_id']         = $usuario['rol_id'];
+        $_SESSION['institucion_id'] = $usuario['institucion_id'];
     }
 }

@@ -1,10 +1,15 @@
 <?php
 // =====================================================
-// EduSaaS RD - Dashboard (Vista)
-// Las variables vienen del DashboardController
+// EduSaaS RD - Dashboard del Colegio (Vista)
+// Ruta: views/colegio/admin/dashboard.php
+// Las variables vienen de DashboardController::index()
+//
+// Paths con __DIR__ (3 niveles desde views/colegio/admin/):
+//   ../../partials/   → views/partials/
+//   ../../../config/  → config/
 // =====================================================
 ?>
-<?php include __DIR__ . '/../partials/plan_uso.php'; ?>
+<?php include __DIR__ . '/../../partials/plan_uso.php'; ?>
 
 <div class="row g-3 mb-4">
     <!-- Stat Cards -->
@@ -77,19 +82,20 @@
             </div>
             <div class="card-body">
                 <?php
-                $appUrl = (require __DIR__ . '/../../config/app.php')['url'];
+                // 3 niveles arriba: views/colegio/admin/ → raíz del proyecto → config/
+                $appUrl = (require __DIR__ . '/../../../config/app.php')['url'];
                 ?>
                 <div class="d-grid gap-2">
-                    <a href="<?= $appUrl ?>/estudiantes/crear" class="btn btn-outline-primary btn-sm text-start">
+                    <a href="<?= $appUrl ?>/admin/estudiantes/crear" class="btn btn-outline-primary btn-sm text-start">
                         <i class="bi bi-person-plus me-2"></i>Registrar estudiante
                     </a>
-                    <a href="<?= $appUrl ?>/matriculas/crear" class="btn btn-outline-success btn-sm text-start">
+                    <a href="<?= $appUrl ?>/admin/matriculas/crear" class="btn btn-outline-success btn-sm text-start">
                         <i class="bi bi-journal-plus me-2"></i>Nueva matrícula
                     </a>
-                    <a href="<?= $appUrl ?>/asistencia" class="btn btn-outline-info btn-sm text-start">
+                    <a href="<?= $appUrl ?>/admin/asistencia" class="btn btn-outline-info btn-sm text-start">
                         <i class="bi bi-calendar-check me-2"></i>Pasar asistencia
                     </a>
-                    <a href="<?= $appUrl ?>/calificaciones" class="btn btn-outline-warning btn-sm text-start">
+                    <a href="<?= $appUrl ?>/admin/calificaciones" class="btn btn-outline-warning btn-sm text-start">
                         <i class="bi bi-pencil-square me-2"></i>Registrar calificaciones
                     </a>
                 </div>

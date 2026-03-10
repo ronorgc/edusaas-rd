@@ -72,6 +72,6 @@ class DashboardController extends BaseController
         }
         $stats['ausentes_hoy'] = (int) $stmt->fetchColumn();
 
-        $this->render('dashboard/index', ['stats' => $stats], 'Dashboard');
+        $this->render('colegio/admin/dashboard', ['stats' => $stats], 'Dashboard');
     }
 }

@@ -137,14 +137,33 @@ abstract class BaseController
     /**
      * Verifica que el usuario tenga uno de los roles permitidos.
      * Ejemplo: $this->requireRole([ROL_ADMIN, ROL_SUPER_ADMIN]);
+     *
+     * FIX-VR ✅ — Caso especial: si el superadmin tiene un modo visor activo
+     * y la ruta requiere ROL_ADMIN, se concede el acceso.
+     * La protección contra escritura la garantiza VisorMiddleware::aplicar()
+     * y requireModoEscritura() en los métodos POST de cada controller.
      */
     protected function requireRole(array $rolesPermitidos): void
     {
         $this->requireAuth();
 
-        if (!in_array($_SESSION['rol_id'] ?? 0, $rolesPermitidos)) {
-            $this->error403();
+        $rolActual = $_SESSION['rol_id'] ?? 0;
+
+        // Caso normal: el usuario tiene el rol requerido
+        if (in_array($rolActual, $rolesPermitidos, true)) {
+            return;
         }
+
+        // Caso especial: superadmin revisando un colegio en modo visor
+        // Condiciones: (1) es superadmin, (2) la ruta pide ROL_ADMIN, (3) visor activo
+        if ($rolActual === ROL_SUPER_ADMIN
+            && in_array(ROL_ADMIN, $rolesPermitidos, true)
+            && VisorMiddleware::estaActivo()
+        ) {
+            return; // Acceso concedido — solo lectura, VisorMiddleware bloquea POST
+        }
+
+        $this->error403('No tienes permisos para acceder a esta sección.');
     }
 
     /**
@@ -302,7 +321,7 @@ abstract class BaseController
                 "🔒 El módulo de <strong>" . ucfirst($modulo) . "</strong> no está incluido " .
                 "en tu plan <strong>{$plan}</strong>. Contacta a EduSaaS RD para actualizar."
             );
-            $this->redirect('/dashboard');
+            $this->redirect('/admin/dashboard');
         }
     }
 
@@ -326,8 +345,8 @@ abstract class BaseController
             $max  = PlanHelper::getLimite($recurso . 's');
             $plan = PlanHelper::getNombrePlan();
             $redir = match($recurso) {
-                'estudiante' => '/estudiantes',
-                'profesor'   => '/profesores',
+                'estudiante' => '/admin/estudiantes',
+                'profesor'   => '/admin/profesores',
                 'seccion'    => '/admin/secciones',
                 default      => '/dashboard',
             };
