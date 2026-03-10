@@ -1,5 +1,5 @@
 <?php
-$appUrl = (require __DIR__ . '/../../../../config/app.php')['url'];
+$appUrl = APP_URL; // ADR-016
 $estadoConfig = [
     'pendiente'   => ['Pendiente',    'badge-vencida',                          'bi-hourglass-split'],
     'en_revision' => ['En revisión',  'bg-info text-white badge',               'bi-eye-fill'],
@@ -38,9 +38,8 @@ $estadoConfig = [
               <span class="badge bg-primary ms-1"><?= count($solicitudes) ?></span>
         </span>
         <?php
-        $urlForm = $appUrl . '/preinscripcion/' .
-            (Database::getInstance()->query("SELECT subdomain FROM instituciones WHERE id = " .
-                ($_SESSION['institucion_id'] ?? 0))->fetchColumn() ?? '');
+        // $urlFormulario se pasa desde AdminController — no query en vista (BUG-B8b-11)
+        $urlForm = $urlFormulario ?? '';
         ?>
         <div class="d-flex gap-2 align-items-center">
             <span class="text-muted small d-none d-md-inline">Enlace público:</span>

@@ -1,4 +1,4 @@
-<?php $appUrl = (require __DIR__ . '/../../../../config/app.php')['url']; ?>
+<?php $appUrl = APP_URL; // ADR-016 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
@@ -12,11 +12,8 @@
 <div class="row g-4">
 <?php foreach ($planes as $plan):
     $inactivo = !$plan['activo'];
-    // Contar colegios activos en este plan
-    $db = Database::getInstance();
-    $colegiosEnPlan = (int)$db->query(
-        "SELECT COUNT(*) FROM suscripciones WHERE plan_id = {$plan['id']} AND estado = 'activa'"
-    )->fetchColumn();
+    // colegios_activos viene del JOIN en PlanModel::getAllConColegiosActivos() — no query en vista (BUG-V-05)
+    $colegiosEnPlan = (int)($plan['colegios_activos'] ?? 0);
 ?>
 <div class="col-md-4">
     <div class="card h-100 <?= $inactivo ? 'opacity-60' : '' ?>"
